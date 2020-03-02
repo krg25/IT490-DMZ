@@ -16,16 +16,26 @@ function callAPI($symbol){ //this may error but I don't know how yet.
 $option = new AlphaVantage\Options();
 $option->setApiKey('AYQ0BP2TLT4GMHRM');
 $client = new AlphaVantage\Client($option);
+$out['returnCode'] = 2; //by default we're going to pretend we're in error state
+try{
 $data =  $client->timeseries()->globalQuote($symbol);
+//var_dump($data);
+
 $out['returnCode'] = 1;
-$out['symbol']	 = $data['01. symbol'];
-$out['open']	 = $data['02. open'];
-$out['high']	 = $data['03. high'];
-$out['low']	 = $data['04. low'];
-$out['price']	 = $data['05. price'];
-$out['volume']	 = $data['06. volume'];
-$out['prvclose'] = $data['08 previous close'];
+$out['symbol']	 = $data['Global Quote']['01. symbol'];
+$out['open']	 = $data['Global Quote']['02. open'];
+$out['high']	 = $data['Global Quote']['03. high'];
+$out['low']	 = $data['Global Quote']['04. low'];
+$out['price']	 = $data['Global Quote']['05. price'];
+$out['volume']	 = $data['Global Quote']['06. volume'];
+$out['prvclose'] = $data['Global Quote']['08. previous close'];
+}catch (Exception $e){
+$out['returnCode'] = 0;
+echo "Bad API call, stock does not exist";
+}finally{
+var_dump($out);
 return $out;
+}
 }
 //DAS IT MANE, I GOT IT WOOOOO!!!!!!
 
@@ -33,7 +43,7 @@ return $out;
 function requestProcessor($request)
 {
   echo "received request".PHP_EOL;
-  var_dump($request);
+  //var_dump($request);
 
 
   if(!isset($request))
