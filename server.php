@@ -7,56 +7,50 @@ require_once('vendor/autoload.php');
 ini_set('display_errors', 'On');
 
 use AlphaVantage\Api\AbstractApi;
-
 use AlphaVantage\Client;
 use AlphaVantage\Exception;
 use AlphaVantage\Options;
 
+
+function callAPI($symbol){ //this may error but I don't know how yet.
 $option = new AlphaVantage\Options();
 $option->setApiKey('AYQ0BP2TLT4GMHRM');
 $client = new AlphaVantage\Client($option);
-$data =  $client->timeseries()->globalQuote('GOOGL');
-var_dump($data);
-
+$data =  $client->timeseries()->globalQuote($symbol);
+$out['returnCode'] = 1;
+$out['symbol']	 = $data['01. symbol'];
+$out['open']	 = $data['02. open'];
+$out['high']	 = $data['03. high'];
+$out['low']	 = $data['04. low'];
+$out['price']	 = $data['05. price'];
+$out['volume']	 = $data['06. volume'];
+$out['prvclose'] = $data['08 previous close'];
+return $out;
+}
 //DAS IT MANE, I GOT IT WOOOOO!!!!!!
 
-/*
+
 function requestProcessor($request)
 {
   echo "received request".PHP_EOL;
   var_dump($request);
 
 
-  if(!isset($request['type']))
+  if(!isset($request))
   {
-    return "ERROR: unsupported message type";
+    return "ERROR: no stock symbol set";
+  }else{
+	$response = callAPI($request);
+	return $response;
   }
-  switch ($request['type'])
-  {
-    case "Login":
-    $login=doLogin($request['username'],$request['password']);
-    if($login['0']){
-	return array("returnCode" => '1', 'message'=>"Successful Login", 'ID' => $login['id']);	
-	}
-	else
-	{
-	  return array("returnCode" => '2', 'message'=>"Unsuccessful Login");
-	}
-    
-
-     case "validate_session":
-      return doValidate($request['sessionId']);
-  }
-
-   return array("returnCode" => '0', 'message'=>"Error, unsupported message type");
-}
+} 
 
 $server = new rabbitMQServer("rabbit/rabbit.ini","dmz");
 
-echo "testRabbitMQServer BEGIN".PHP_EOL;
+echo "Stock API Awaiting Requests".PHP_EOL;
 $server->process_requests('requestProcessor');
 echo "testRabbitMQServer END".PHP_EOL;
 exit();
-*/
+
 ?>
 
