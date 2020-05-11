@@ -1,0 +1,19 @@
+[Unit]
+Description=Stock App API Listener
+After=network.target
+#After=mysqld.service
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+#ExecStart=/usr/bin/env php /home/ubuntu/git/IT490-DMZ 
+WorkingDirectory=/home/ubuntu/git/IT490-DMZ
+ExecStart=/bin/bash /home/ubuntu/git/IT490-DMZ/startStockAPI.sh
+RemainAfterExit=true
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=stockAPI
+[Install]
+WantedBy=multi-user.target
